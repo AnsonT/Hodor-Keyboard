@@ -13,10 +13,14 @@ class KeyboardViewController: UIInputViewController {
     @IBOutlet var nextKeyboardButton: UIButton!
     @IBOutlet var hodorButton: UIButton!
 
-    init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func updateViewConstraints() {
         super.updateViewConstraints()
     
@@ -27,43 +31,44 @@ class KeyboardViewController: UIInputViewController {
         super.viewDidLoad()
     
         // Perform custom UI setup here
-        self.nextKeyboardButton = UIButton.buttonWithType(.System) as UIButton
+        self.nextKeyboardButton = UIButton(type: .system) as UIButton
     
-        self.nextKeyboardButton.setTitle(NSLocalizedString("Next keyboard", comment: "Title for 'Next Keyboard' button"), forState: .Normal)
+        self.nextKeyboardButton.setTitle(NSLocalizedString("Next keyboard", comment: "Title for 'Next Keyboard' button"), for: .normal)
         self.nextKeyboardButton.sizeToFit()
-        self.nextKeyboardButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
+
         
-        self.nextKeyboardButton.titleLabel.font = UIFont(name: "Helvetica", size: 10)
+        self.nextKeyboardButton.titleLabel!.font = UIFont(name: "Helvetica", size: 10)
     
-        self.nextKeyboardButton.addTarget(self, action: "advanceToNextInputMode", forControlEvents: .TouchUpInside)
+        self.nextKeyboardButton.addTarget(self, action: #selector(UIInputViewController.advanceToNextInputMode), for: .touchUpInside)
         
         self.view.addSubview(self.nextKeyboardButton)
     
-        var nextKeyboardButtonLeftSideConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .Left, relatedBy: .Equal, toItem: self.view, attribute: .Left, multiplier: 1.0, constant: 0.0)
-        var nextKeyboardButtonBottomConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .Bottom, relatedBy: .Equal, toItem: self.view, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
+        let nextKeyboardButtonLeftSideConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 0.0)
+        let nextKeyboardButtonBottomConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         self.view.addConstraints([nextKeyboardButtonLeftSideConstraint, nextKeyboardButtonBottomConstraint])
         
         // Hodor button
         
-        self.hodorButton = UIButton.buttonWithType(.System) as UIButton
+        self.hodorButton = UIButton(type: .system) as UIButton
         
-        self.hodorButton.setTitle(NSLocalizedString("Hodor", comment: "Hodor button"), forState: .Normal)
+        self.hodorButton.setTitle(NSLocalizedString("Hodor", comment: "Hodor button"), for: .normal)
         self.hodorButton.sizeToFit()
-        self.hodorButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.hodorButton.translatesAutoresizingMaskIntoConstraints = false
         
-        self.hodorButton.titleLabel.font = UIFont(name: "Helvetica", size: 50)
+        self.hodorButton.titleLabel!.font = UIFont(name: "Helvetica", size: 50)
         
-        self.hodorButton.addTarget(self, action: "hodor", forControlEvents: .TouchUpInside)
+        self.hodorButton.addTarget(self, action: #selector(KeyboardViewController.hodor), for: .touchUpInside)
         
         self.view.addSubview(self.hodorButton)
         
-        var hodorButtonCenterXConstraint = NSLayoutConstraint(item: self.hodorButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
-        var hodorButtonCenterYConstraint = NSLayoutConstraint(item: self.hodorButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        let hodorButtonCenterXConstraint = NSLayoutConstraint(item: self.hodorButton, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        let hodorButtonCenterYConstraint = NSLayoutConstraint(item: self.hodorButton, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         self.view.addConstraints([hodorButtonCenterXConstraint, hodorButtonCenterYConstraint])
     }
     
-    func hodor() {
-        var proxy = self.textDocumentProxy as UITextDocumentProxy
+    @objc func hodor() {
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
         proxy.insertText("Hodor ")
     }
     
@@ -72,22 +77,22 @@ class KeyboardViewController: UIInputViewController {
         // Dispose of any resources that can be recreated
     }
 
-    override func textWillChange(textInput: UITextInput) {
+    override func textWillChange(_ textInput: UITextInput?) {
         // The app is about to change the document's contents. Perform any preparation here.
     }
 
-    override func textDidChange(textInput: UITextInput) {
+    override func textDidChange(_ textInput: UITextInput?) {
         // The app has just changed the document's contents, the document context has been updated.
     
         var textColor: UIColor
-        var proxy = self.textDocumentProxy as UITextDocumentProxy
-        if proxy.keyboardAppearance == UIKeyboardAppearance.Dark {
-            textColor = UIColor.whiteColor()
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
+        if proxy.keyboardAppearance == UIKeyboardAppearance.dark {
+            textColor = UIColor.white
         } else {
-            textColor = UIColor.blackColor()
+            textColor = UIColor.black
         }
-        self.nextKeyboardButton.setTitleColor(textColor, forState: .Normal)
-        self.hodorButton.setTitleColor(textColor, forState: .Normal)
+        self.nextKeyboardButton.setTitleColor(textColor, for: .normal)
+        self.hodorButton.setTitleColor(textColor, for: .normal)
     }
 
 }
